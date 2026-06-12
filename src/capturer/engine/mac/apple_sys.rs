@@ -29,7 +29,7 @@ pub struct NSString(pub id);
 
 pub type CFNumberRef = *const __CFNumber;
 pub type SCStreamFrameInfo = NSString;
-extern "C" {
+unsafe extern "C" {
     pub fn CFDictionaryGetValue(
         theDict: CFDictionaryRef,
         key: *const ::std::os::raw::c_void,

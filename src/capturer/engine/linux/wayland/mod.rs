@@ -30,7 +30,7 @@ use pw::{
         },
         utils::{Direction, SpaTypes},
     },
-    stream::{Stream, StreamState},
+    stream::{Stream, StreamRc, StreamState},
 };
 
 use crate::{
@@ -240,8 +240,8 @@ fn start_pipewire_capturer(
     };
 
     // 创建 PipeWire 流
-    let stream = Stream::new(
-        &core,
+    let stream = StreamRc::new(
+        core.clone(),
         "scap",
         properties! {
             *pw::keys::MEDIA_TYPE => "Video",
