@@ -14,7 +14,10 @@ use windows_capture::{
     frame::Frame as WCFrame,
     graphics_capture_api::InternalCaptureControl,
     monitor::Monitor as WCMonitor,
-    settings::{ColorFormat, CursorCaptureSettings, DrawBorderSettings, Settings as WCSettings},
+    settings::{
+        ColorFormat, CursorCaptureSettings, DirtyRegionSettings, DrawBorderSettings,
+        MinimumUpdateIntervalSettings, SecondaryWindowSettings, Settings as WCSettings,
+    },
     window::Window as WCWindow,
 };
 
@@ -74,15 +77,13 @@ impl GraphicsCaptureApiHandler for Capturer {
                 let end_y = (cropped_area.origin.y + cropped_area.size.height) as u32;
 
                 // 裁剪帧缓冲区
-                let mut cropped_buffer = frame
+                let cropped_buffer = frame
                     .buffer_crop(start_x, start_y, end_x, end_y)
                     .expect("裁剪缓冲区失败");
 
                 // 获取原始帧数据
-                let raw_frame_buffer = match cropped_buffer.as_nopadding_buffer() {
-                    Ok(buffer) => buffer,
-                    Err(_) => return Err("获取原始缓冲区失败".into()),
-                };
+                let mut nopadding_buffer = Vec::new();
+                let raw_frame_buffer = cropped_buffer.as_nopadding_buffer(&mut nopadding_buffer);
 
                 (
                     cropped_area.size.width as i32,
@@ -185,6 +186,9 @@ pub fn create_capturer(options: &Options, tx: mpsc::Sender<anyhow::Result<Frame>
             WCMonitor::from_raw_hmonitor(display.raw_handle.0),
             show_cursor,
             DrawBorderSettings::Default,
+            SecondaryWindowSettings::Default,
+            MinimumUpdateIntervalSettings::Default,
+            DirtyRegionSettings::Default,
             color_format,
             FlagStruct {
                 tx,
@@ -195,6 +199,9 @@ pub fn create_capturer(options: &Options, tx: mpsc::Sender<anyhow::Result<Frame>
             WCWindow::from_raw_hwnd(window.raw_handle.0),
             show_cursor,
             DrawBorderSettings::Default,
+            SecondaryWindowSettings::Default,
+            MinimumUpdateIntervalSettings::Default,
+            DirtyRegionSettings::Default,
             color_format,
             FlagStruct {
                 tx,
