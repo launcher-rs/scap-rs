@@ -1,6 +1,5 @@
 /// Windows 平台屏幕捕获实现
 /// 使用 Windows Graphics Capture API 进行屏幕捕获
-
 use crate::{
     capturer::{Area, Options, Point, Resolution, Size},
     frame::{BGRAFrame, Frame, FrameType, RGBxFrame},

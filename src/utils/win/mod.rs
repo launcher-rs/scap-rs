@@ -1,6 +1,5 @@
 /// Windows 平台支持检测模块
 /// 使用 Graphics Capture API 检查平台支持
-
 use windows_capture::graphics_capture_api::GraphicsCaptureApi;
 
 /// 检查当前系统是否支持屏幕捕获

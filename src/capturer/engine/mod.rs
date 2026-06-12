@@ -92,7 +92,7 @@ impl Engine {
         #[cfg(target_os = "windows")]
         {
             // 创建 Windows 捕获器
-            let (win, target) = win::create_capturer(&options, tx);
+            let (win, target) = win::create_capturer(options, tx);
             Ok(Engine {
                 win,
                 options: (*options).clone(),

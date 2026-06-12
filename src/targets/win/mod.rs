@@ -1,6 +1,5 @@
 /// Windows 平台目标管理实现
 /// 使用 Windows API 枚举显示器和窗口
-
 use super::{Display, Target};
 use anyhow::{Context as _, Result};
 use windows::Win32::UI::HiDpi::{GetDpiForMonitor, GetDpiForWindow, MDT_EFFECTIVE_DPI};
@@ -99,7 +98,7 @@ pub fn get_scale_factor(target: &Target) -> f64 {
             )
             .is_ok()
             {
-                dpi_x.into()
+                dpi_x
             } else {
                 BASE_DPI  // 获取失败时使用基准 DPI
             }
