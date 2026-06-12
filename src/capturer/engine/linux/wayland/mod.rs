@@ -240,8 +240,8 @@ fn start_pipewire_capturer(
     };
 
     // 创建 PipeWire 流
-    let stream = StreamRc::new(
-        core,
+    let stream = Stream::new(
+        &core,
         "scap",
         properties! {
             *pw::keys::MEDIA_TYPE => "Video",

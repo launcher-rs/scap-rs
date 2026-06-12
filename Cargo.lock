@@ -58,22 +58,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7f202df86484c868dbad7eaa557ef785d5c66295e41b460ef922eca0723b842c"
 
 [[package]]
-name = "apple-cf"
-version = "0.6.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "cbf4b8338fc021d979da2f134068afeac54f37382f34af0e73936a88f92d2374"
-
-[[package]]
-name = "apple-metal"
-version = "0.6.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "14c1b0238c7353ce2a000cb261e7168e1ea4e3b21ecb525caa9ea2e9e60a5aa3"
-dependencies = [
- "apple-cf",
- "libc",
-]
-
-[[package]]
 name = "arbitrary"
 version = "1.4.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1373,7 +1357,6 @@ name = "scap-rs"
 version = "0.1.0"
 dependencies = [
  "anyhow",
- "apple-metal",
  "cocoa",
  "core-graphics-helmer-fork",
  "dbus",
