@@ -30,7 +30,7 @@ use pw::{
         },
         utils::{Direction, SpaTypes},
     },
-    stream::{StreamRc, StreamState},
+    stream::{Stream, StreamState},
 };
 
 use crate::{
@@ -61,7 +61,7 @@ struct ListenerUserData {
 /// 参数变更回调函数
 /// 处理 PipeWire 流的格式参数变更
 fn param_changed_callback(
-    _stream: &StreamRc,
+    _stream: &Stream,
     user_data: &mut ListenerUserData,
     id: u32,
     param: Option<&Pod>,
@@ -95,7 +95,7 @@ fn param_changed_callback(
 /// 状态变更回调函数
 /// 处理 PipeWire 流的状态变更事件
 fn state_changed_callback(
-    _stream: &StreamRc,
+    _stream: &Stream,
     _user_data: &mut ListenerUserData,
     _old: StreamState,
     new: StreamState,
@@ -135,7 +135,7 @@ unsafe fn get_timestamp(buffer: *mut spa_buffer) -> i64 {
 
 /// 处理回调函数
 /// PipeWire 流的数据处理回调
-fn process_callback(stream: &StreamRc, user_data: &mut ListenerUserData) {
+fn process_callback(stream: &Stream, user_data: &mut ListenerUserData) {
     let buffer = unsafe { stream.dequeue_raw_buffer() };
     let frame_result = match process_callback_impl(buffer, user_data) {
         Ok(None) => None,

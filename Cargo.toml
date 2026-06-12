@@ -39,7 +39,7 @@ windows = { version = "0.62.2", features = [
 [target.'cfg(target_os = "macos")'.dependencies]
 tao-core-video-sys = "0.2.0"  # Core Video 系统绑定
 core-graphics-helmer-fork = "0.24.0"  # Core Graphics 绑定
-screencapturekit = "7.0.1"  # ScreenCaptureKit 绑定
+screencapturekit = "1.5.2"  # ScreenCaptureKit 绑定
 screencapturekit-sys = "0.2.8"  # ScreenCaptureKit 系统绑定
 cocoa = "0.26.1"  # Cocoa 框架绑定
 objc = "0.2.7"  # Objective-C 运行时绑定

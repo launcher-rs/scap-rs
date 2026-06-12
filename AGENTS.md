@@ -96,7 +96,7 @@ CI 通过矩阵策略在三个平台分别运行，确保跨平台兼容性。
 |------|------|
 | windows-capture | 2.0 |
 | windows | 0.62.2 |
-| screencapturekit | 7.0.1 |
+| screencapturekit | 1.5.2 |
 | screencapturekit-sys | 0.2.8 |
 | cocoa | 0.26.1 |
 | xcb | 1.7.0 |
