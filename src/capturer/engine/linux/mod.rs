@@ -1,10 +1,13 @@
-/// Linux/FreeBSD 平台屏幕捕获实现
-/// 支持 Wayland 和 X11 显示服务器协议
+// Linux/FreeBSD 平台屏幕捕获实现
+// 支持 Wayland 和 X11 显示服务器协议
 
 #[cfg(not(any(feature = "wayland", feature = "x11")))]
 compile_error!("必须启用 'wayland' 或 'x11' 特性之一。");
 
-use std::{env, sync::mpsc};
+use std::sync::mpsc;
+
+#[cfg(any(feature = "wayland", feature = "x11"))]
+use std::env;
 
 use anyhow::{Result, anyhow};
 
@@ -56,13 +59,15 @@ type Type = mpsc::Sender<Result<Frame>>;
 impl LinuxCapturer {
     /// 创建新的 Linux 捕获器
     /// 根据环境变量自动检测显示服务器类型
-    pub fn new(options: &Options, tx: Type) -> Result<Self> {
-        // 优先尝试 Wayland
+    pub fn new(_options: &Options, _tx: Type) -> Result<Self> {
+        // 当没有启用任何特性时，参数未使用
+        let _ = (_options, _tx);
+
         #[cfg(feature = "wayland")]
         if env::var("WAYLAND_DISPLAY").is_ok() {
             log::debug!("创建新的 Wayland 屏幕捕获器");
             return Ok(Self {
-                imp: Box::new(WaylandCapturer::new(options, tx)?),
+                imp: Box::new(WaylandCapturer::new(_options, _tx)?),
             });
         }
 
@@ -71,10 +76,9 @@ impl LinuxCapturer {
         if env::var("DISPLAY").is_ok() {
             log::debug!("创建新的 X11 屏幕捕获器");
             return Ok(Self {
-                imp: Box::new(X11Capturer::new(options, tx)?),
+                imp: Box::new(X11Capturer::new(_options, _tx)?),
             });
         }
-
         // 根据启用的特性返回相应的错误信息
         #[cfg(all(feature = "wayland", feature = "x11"))]
         let error_msg = "不支持的平台：无法检测到 Wayland 或 X11 显示器";
@@ -83,6 +87,8 @@ impl LinuxCapturer {
             "不支持的平台：无法检测到 X11 显示器。请启用 'wayland' 特性以支持 Wayland。";
         #[cfg(all(feature = "wayland", not(feature = "x11")))]
         let error_msg = "不支持的平台：无法检测到 Wayland 显示器。请启用 'x11' 特性以支持 X11。";
+        #[cfg(not(any(feature = "wayland", feature = "x11")))]
+        let error_msg = "必须启用 'wayland' 或 'x11' 特性之一。";
 
         Err(anyhow!(error_msg))
     }

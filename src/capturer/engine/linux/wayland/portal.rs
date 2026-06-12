@@ -61,8 +61,7 @@ impl<'a, T: blocking::BlockingSender, C: ::std::ops::Deref<Target = T>>
             "org.freedesktop.portal.ScreenCast",
             "CreateSession",
             (options,),
-        )
-        .and_then(|r: (dbus::Path<'static>,)| Ok(r.0))
+        ).map(|r: (dbus::Path<'static>,)| r.0)
     }
 
     /// 选择投射源
@@ -75,8 +74,7 @@ impl<'a, T: blocking::BlockingSender, C: ::std::ops::Deref<Target = T>>
             "org.freedesktop.portal.ScreenCast",
             "SelectSources",
             (session_handle, options),
-        )
-        .and_then(|r: (dbus::Path<'static>,)| Ok(r.0))
+        ).map(|r: (dbus::Path<'static>,)| r.0)
     }
 
     /// 启动屏幕投射
@@ -90,8 +88,7 @@ impl<'a, T: blocking::BlockingSender, C: ::std::ops::Deref<Target = T>>
             "org.freedesktop.portal.ScreenCast",
             "Start",
             (session_handle, parent_window, options),
-        )
-        .and_then(|r: (dbus::Path<'static>,)| Ok(r.0))
+        ).map(|r: (dbus::Path<'static>,)| r.0)
     }
 
     /// 打开 PipeWire 远程连接
@@ -104,14 +101,13 @@ impl<'a, T: blocking::BlockingSender, C: ::std::ops::Deref<Target = T>>
             "org.freedesktop.portal.ScreenCast",
             "OpenPipeWireRemote",
             (session_handle, options),
-        )
-        .and_then(|r: (arg::OwnedFd,)| Ok(r.0))
+        ).map(|r: (arg::OwnedFd,)| r.0)
     }
 
     /// 获取可用的源类型
     fn available_source_types(&self) -> Result<u32, dbus::Error> {
         <Self as blocking::stdintf::org_freedesktop_dbus::Properties>::get(
-            &self,
+            self,
             "org.freedesktop.portal.ScreenCast",
             "AvailableSourceTypes",
         )
@@ -120,7 +116,7 @@ impl<'a, T: blocking::BlockingSender, C: ::std::ops::Deref<Target = T>>
     /// 获取可用的光标模式
     fn available_cursor_modes(&self) -> Result<u32, dbus::Error> {
         <Self as blocking::stdintf::org_freedesktop_dbus::Properties>::get(
-            &self,
+            self,
             "org.freedesktop.portal.ScreenCast",
             "AvailableCursorModes",
         )
@@ -129,7 +125,7 @@ impl<'a, T: blocking::BlockingSender, C: ::std::ops::Deref<Target = T>>
     /// 获取版本号
     fn version(&self) -> Result<u32, dbus::Error> {
         <Self as blocking::stdintf::org_freedesktop_dbus::Properties>::get(
-            &self,
+            self,
             "org.freedesktop.portal.ScreenCast",
             "version",
         )
@@ -326,7 +322,7 @@ impl<'a> ScreenCastPortal<'a> {
 
         // 设置 D-Bus 信号匹配规则
         let mut rule = MatchRule::new();
-        rule.path = Some(dbus::Path::from(path));
+        rule.path = Some(path);
         rule.msg_type = Some(dbus::MessageType::Signal);
         rule.sender = Some(BusName::from("org.freedesktop.portal.Desktop"));
         rule.interface = Some(Interface::from("org.freedesktop.portal.Request"));

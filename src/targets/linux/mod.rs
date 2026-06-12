@@ -1,5 +1,5 @@
-/// Linux/FreeBSD 平台目标管理实现
-/// 使用 X11 和 Wayland 协议枚举显示器和窗口
+// Linux/FreeBSD 平台目标管理实现
+// 使用 X11 和 Wayland 协议枚举显示器和窗口
 
 #[cfg(not(any(feature = "wayland", feature = "x11")))]
 compile_error!("必须启用 'wayland' 或 'x11' 特性之一。");
@@ -53,7 +53,7 @@ fn get_property(
         long_offset: 0,
         long_length: length,
     });
-    Ok(conn.wait_for_reply(cookie)?)
+    conn.wait_for_reply(cookie)
 }
 
 /// 解码复合文本（Compound Text）
@@ -91,7 +91,7 @@ fn decode_compound_text(
     }
 
     // 转换文本编码
-    let mut xname = XTextProperty {
+    let xname = XTextProperty {
         value: c_string.as_ptr() as *mut u8,
         encoding: ttype.resource_id() as u64,
         format: 8,
@@ -99,7 +99,7 @@ fn decode_compound_text(
     };
     let mut list: *mut *mut c_char = std::ptr::null_mut();
     let mut count: i32 = 0;
-    let result = unsafe { XmbTextPropertyToTextList(display, &mut xname, &mut list, &mut count) };
+    let result = unsafe { XmbTextPropertyToTextList(display, &xname, &mut list, &mut count) };
     if result < 1 || list.is_null() || count < 1 {
         Ok(String::from("n/a"))
     } else {
@@ -241,6 +241,8 @@ pub fn get_all_targets() -> anyhow::Result<Vec<Target>> {
     let error_msg = "不支持的平台：无法检测到 X11 显示器。请启用 'wayland' 特性以支持 Wayland。";
     #[cfg(all(feature = "wayland", not(feature = "x11")))]
     let error_msg = "不支持的平台：无法检测到 Wayland 显示器。请启用 'x11' 特性以支持 X11。";
+    #[cfg(not(any(feature = "wayland", feature = "x11")))]
+    let error_msg = "必须启用 'wayland' 或 'x11' 特性之一。";
 
     Err(anyhow!(error_msg))
 }
@@ -311,6 +313,8 @@ pub fn get_main_display() -> anyhow::Result<Display> {
     let error_msg = "不支持的平台：无法检测到 X11 显示器。请启用 'wayland' 特性以支持 Wayland。";
     #[cfg(all(feature = "wayland", not(feature = "x11")))]
     let error_msg = "不支持的平台：无法检测到 Wayland 显示器。请启用 'x11' 特性以支持 X11。";
+    #[cfg(not(any(feature = "wayland", feature = "x11")))]
+    let error_msg = "必须启用 'wayland' 或 'x11' 特性之一。";
 
     Err(anyhow!(error_msg))
 }
