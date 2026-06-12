@@ -59,15 +59,14 @@ type Type = mpsc::Sender<Result<Frame>>;
 impl LinuxCapturer {
     /// 创建新的 Linux 捕获器
     /// 根据环境变量自动检测显示服务器类型
-    pub fn new(_options: &Options, _tx: Type) -> Result<Self> {
-        // 当没有启用任何特性时，参数未使用
-        let _ = (_options, _tx);
-
+    #[allow(unused_variables)]
+    pub fn new(options: &Options, tx: Type) -> Result<Self> {
+        // 优先尝试 Wayland
         #[cfg(feature = "wayland")]
         if env::var("WAYLAND_DISPLAY").is_ok() {
             log::debug!("创建新的 Wayland 屏幕捕获器");
             return Ok(Self {
-                imp: Box::new(WaylandCapturer::new(_options, _tx)?),
+                imp: Box::new(WaylandCapturer::new(options, tx)?),
             });
         }
 
@@ -76,7 +75,7 @@ impl LinuxCapturer {
         if env::var("DISPLAY").is_ok() {
             log::debug!("创建新的 X11 屏幕捕获器");
             return Ok(Self {
-                imp: Box::new(X11Capturer::new(_options, _tx)?),
+                imp: Box::new(X11Capturer::new(options, tx)?),
             });
         }
         // 根据启用的特性返回相应的错误信息
