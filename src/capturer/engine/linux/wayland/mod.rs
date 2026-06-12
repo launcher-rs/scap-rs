@@ -100,12 +100,9 @@ fn state_changed_callback(
     _old: StreamState,
     new: StreamState,
 ) {
-    match new {
-        StreamState::Error(e) => {
-            log::debug!("PipeWire: 状态变更为错误({e})");
-            STREAM_STATE_CHANGED_TO_ERROR.store(true, std::sync::atomic::Ordering::Relaxed);
-        }
-        _ => {}
+    if let StreamState::Error(e) = new {
+        log::debug!("PipeWire: 状态变更为错误({e})");
+        STREAM_STATE_CHANGED_TO_ERROR.store(true, std::sync::atomic::Ordering::Relaxed);
     }
 }
 
@@ -457,7 +454,7 @@ impl LinuxCapturerImpl for WaylandCapturer {
         if let Some(handle) = self.capturer_join_handle.take() {
             match handle.join() {
                 Ok(()) => {}
-                Err(err) => log::error!("连接 Wayland 屏幕捕获线程失败: {:?}", err),
+                Err(err) => log::error!("连接 Wayland 屏幕捕获线程失败: {err:?}"),
             }
         }
         // 重置状态

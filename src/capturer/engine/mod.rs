@@ -44,7 +44,7 @@ pub fn get_output_frame_size(options: &Options) -> [u32; 2] {
     #[cfg(any(target_os = "linux", target_os = "freebsd"))]
     {
         // TODO: 如何在 Linux 上计算输出尺寸？
-        return [0, 0];
+        [0, 0]
     }
 }
 
@@ -104,7 +104,7 @@ impl Engine {
         #[cfg(any(target_os = "linux", target_os = "freebsd"))]
         {
             // 创建 Linux 捕获器
-            let linux = linux::create_capturer(&options, tx)?;
+            let linux = linux::create_capturer(options, tx)?;
             let target = linux.imp.target().cloned();
             Ok(Engine {
                 linux,
