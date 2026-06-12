@@ -97,15 +97,15 @@ fn draw_cursor(
     let mut image_idx: u32 = ((y - win_y) * win_width * stride as i32) as u32;
 
     // 绘制光标到图像上
-    for y in 0..h {
+    for _y in 0..h {
         cursor_idx += c_off;
         image_idx += i_off as u32 * stride;
-        for x in 0..w {
+        for _x in 0..w {
             let cursor_pix = cursor_image.cursor_image()[cursor_idx as usize];
             let r = (cursor_pix & 0xFF) as u8;
             let g = ((cursor_pix >> 8) & 0xFF) as u8;
             let b = ((cursor_pix >> 16) & 0xFF) as u8;
-            let a = ((cursor_pix >> 24) & 0xFF);
+            let a = (cursor_pix >> 24) & 0xFF;
 
             let i = image_idx as usize;
             // 根据 alpha 值混合颜色

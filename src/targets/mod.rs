@@ -100,6 +100,7 @@ pub fn get_all_targets() -> Result<Vec<Target>> {
 
 /// 获取目标的缩放因子
 /// 用于处理高 DPI 显示器
+#[allow(unused_variables)]
 pub fn get_scale_factor(target: &Target) -> f64 {
     #[cfg(target_os = "macos")]
     return mac::get_scale_factor(target);

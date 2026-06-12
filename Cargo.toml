@@ -43,6 +43,7 @@ screencapturekit = "7.0.1"  # ScreenCaptureKit 绑定
 screencapturekit-sys = "0.2.8"  # ScreenCaptureKit 系统绑定
 cocoa = "0.26.1"  # Cocoa 框架绑定
 objc = "0.2.7"  # Objective-C 运行时绑定
+apple-metal = ">=0.6, <0.8"  # 锁定 apple-metal 版本，避免 0.8.x 需要 macOS 26 SDK
 
 # Linux/FreeBSD 平台特定依赖
 [target.'cfg(any(target_os = "linux", target_os = "freebsd"))'.dependencies]

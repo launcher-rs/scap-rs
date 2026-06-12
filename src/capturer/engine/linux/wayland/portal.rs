@@ -377,7 +377,9 @@ impl<'a> ScreenCastPortal<'a> {
                     let p = dbus::Path::from(match h {
                         Some(p) => p,
                         None => {
-                            return Err(LinCapError::new(String::from("收到无效的 session_handle")));
+                            return Err(LinCapError::new(String::from(
+                                "收到无效的 session_handle",
+                            )));
                         }
                     });
 

@@ -29,6 +29,7 @@ pub type ChannelItem = Frame;
 
 /// 获取输出帧的尺寸
 /// 根据捕获选项和平台特性计算最终输出尺寸
+#[allow(unused_variables)]
 pub fn get_output_frame_size(options: &Options) -> [u32; 2] {
     #[cfg(target_os = "macos")]
     {
@@ -103,7 +104,6 @@ impl Engine {
         #[cfg(any(target_os = "linux", target_os = "freebsd"))]
         {
             // 创建 Linux 捕获器
-            use linux::LinuxCapturerImpl;
             let linux = linux::create_capturer(&options, tx)?;
             let target = linux.imp.target().cloned();
             Ok(Engine {

@@ -13,8 +13,9 @@ use std::{
 use anyhow::{Context as _, Result, anyhow};
 use pipewire as pw;
 use pw::{
-    context::Context,
-    main_loop::MainLoop,
+    context::ContextRc,
+    loop_::Timeout,
+    main_loop::MainLoopRc,
     properties::properties,
     spa::{
         self,
@@ -29,11 +30,10 @@ use pw::{
         },
         utils::{Direction, SpaTypes},
     },
-    stream::{StreamRef, StreamState},
+    stream::{StreamRc, StreamState},
 };
 
 use crate::{
-    Target,
     capturer::Options,
     frame::{BGRxFrame, Frame, RGBFrame, RGBxFrame, XBGRFrame},
 };
@@ -61,7 +61,7 @@ struct ListenerUserData {
 /// 参数变更回调函数
 /// 处理 PipeWire 流的格式参数变更
 fn param_changed_callback(
-    _stream: &StreamRef,
+    _stream: &StreamRc,
     user_data: &mut ListenerUserData,
     id: u32,
     param: Option<&Pod>,
@@ -95,7 +95,7 @@ fn param_changed_callback(
 /// 状态变更回调函数
 /// 处理 PipeWire 流的状态变更事件
 fn state_changed_callback(
-    _stream: &StreamRef,
+    _stream: &StreamRc,
     _user_data: &mut ListenerUserData,
     _old: StreamState,
     new: StreamState,
@@ -112,28 +112,30 @@ fn state_changed_callback(
 /// 获取缓冲区时间戳
 /// 从 PipeWire 缓冲区元数据中提取 PTS（显示时间戳）
 unsafe fn get_timestamp(buffer: *mut spa_buffer) -> i64 {
-    let n_metas = (*buffer).n_metas;
-    if n_metas > 0 {
-        let mut meta_ptr = (*buffer).metas;
-        let metas_end = (*buffer).metas.wrapping_add(n_metas as usize);
-        // 遍历元数据查找头部信息
-        while meta_ptr != metas_end {
-            if (*meta_ptr).type_ == SPA_META_Header {
-                let meta_header: &mut spa_meta_header =
-                    &mut *((*meta_ptr).data as *mut spa_meta_header);
-                return meta_header.pts;
+    unsafe {
+        let n_metas = (*buffer).n_metas;
+        if n_metas > 0 {
+            let mut meta_ptr = (*buffer).metas;
+            let metas_end = (*buffer).metas.wrapping_add(n_metas as usize);
+            // 遍历元数据查找头部信息
+            while meta_ptr != metas_end {
+                if (*meta_ptr).type_ == SPA_META_Header {
+                    let meta_header: &mut spa_meta_header =
+                        &mut *((*meta_ptr).data as *mut spa_meta_header);
+                    return meta_header.pts;
+                }
+                meta_ptr = meta_ptr.wrapping_add(1);
             }
-            meta_ptr = meta_ptr.wrapping_add(1);
+            0
+        } else {
+            0
         }
-        0
-    } else {
-        0
     }
 }
 
 /// 处理回调函数
 /// PipeWire 流的数据处理回调
-fn process_callback(stream: &StreamRef, user_data: &mut ListenerUserData) {
+fn process_callback(stream: &StreamRc, user_data: &mut ListenerUserData) {
     let buffer = unsafe { stream.dequeue_raw_buffer() };
     let frame_result = match process_callback_impl(buffer, user_data) {
         Ok(None) => None,
@@ -223,14 +225,14 @@ fn start_pipewire_capturer(
     options: Options,
     tx: Sender<Result<Frame>>,
     stream_id: u32,
-) -> Result<MainLoop> {
+) -> Result<MainLoopRc> {
     // 初始化 PipeWire
     pw::init();
 
     // 创建主循环、上下文和核心连接
-    let mainloop = MainLoop::new(None)?;
-    let context = Context::new(&mainloop)?;
-    let core = context.connect(None)?;
+    let mainloop = MainLoopRc::new(None)?;
+    let context = ContextRc::new(&mainloop, None)?;
+    let core = context.connect_rc(None)?;
 
     let user_data = ListenerUserData {
         tx,
@@ -238,8 +240,8 @@ fn start_pipewire_capturer(
     };
 
     // 创建 PipeWire 流
-    let stream = pw::stream::Stream::new(
-        &core,
+    let stream = StreamRc::new(
+        core,
         "scap",
         properties! {
             *pw::keys::MEDIA_TYPE => "Video",
@@ -387,7 +389,7 @@ fn pipewire_capturer(
         && // 如果流状态变更为错误，退出循环
           !STREAM_STATE_CHANGED_TO_ERROR.load(std::sync::atomic::Ordering::Relaxed)
     {
-        pw_loop.iterate(Duration::from_millis(100));
+        pw_loop.iterate(Timeout::Finite(Duration::from_millis(100)));
     }
 }
 

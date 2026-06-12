@@ -59,11 +59,27 @@ checksum = "dcfed56ad506cb2c684a14971b8861fdc3baaaae314b9e5f9bb532cbe3ba7a4f"
 
 [[package]]
 name = "apple-cf"
+version = "0.6.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "cbf4b8338fc021d979da2f134068afeac54f37382f34af0e73936a88f92d2374"
+
+[[package]]
+name = "apple-cf"
 version = "0.9.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e7fd680cd0f3f02ee717b2014b26d18985c57b784384ba47213fcf8791e8c250"
 dependencies = [
  "doom-fish-utils",
+]
+
+[[package]]
+name = "apple-metal"
+version = "0.6.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "14c1b0238c7353ce2a000cb261e7168e1ea4e3b21ecb525caa9ea2e9e60a5aa3"
+dependencies = [
+ "apple-cf 0.6.1",
+ "libc",
 ]
 
 [[package]]
@@ -1424,6 +1440,7 @@ name = "scap-rs"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "apple-metal 0.6.1",
  "cocoa",
  "core-graphics-helmer-fork",
  "dbus",
@@ -1454,8 +1471,8 @@ version = "7.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7fe7bf65216382fdf28fc515df5b864aac0a2abe2475d7da44e7d6ad5804b2ce"
 dependencies = [
- "apple-cf",
- "apple-metal",
+ "apple-cf 0.9.3",
+ "apple-metal 0.8.8",
 ]
 
 [[package]]
