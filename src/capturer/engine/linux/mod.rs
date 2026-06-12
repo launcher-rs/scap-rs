@@ -6,12 +6,12 @@ compile_error!("必须启用 'wayland' 或 'x11' 特性之一。");
 
 use std::{env, sync::mpsc};
 
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 
 #[cfg(feature = "x11")]
 use x11::X11Capturer;
 
-use crate::{capturer::Options, frame::Frame, Target};
+use crate::{Target, capturer::Options, frame::Frame};
 
 /// 错误处理模块
 mod error;
@@ -47,7 +47,7 @@ pub trait LinuxCapturerImpl {
 /// Linux 捕获器结构体
 /// 封装具体的捕获器实现（Wayland 或 X11）
 pub struct LinuxCapturer {
-    pub imp: Box<dyn LinuxCapturerImpl>,  // 具体实现（Wayland 或 X11）
+    pub imp: Box<dyn LinuxCapturerImpl>, // 具体实现（Wayland 或 X11）
 }
 
 /// 帧数据发送通道类型别名
@@ -79,7 +79,8 @@ impl LinuxCapturer {
         #[cfg(all(feature = "wayland", feature = "x11"))]
         let error_msg = "不支持的平台：无法检测到 Wayland 或 X11 显示器";
         #[cfg(all(not(feature = "wayland"), feature = "x11"))]
-        let error_msg = "不支持的平台：无法检测到 X11 显示器。请启用 'wayland' 特性以支持 Wayland。";
+        let error_msg =
+            "不支持的平台：无法检测到 X11 显示器。请启用 'wayland' 特性以支持 Wayland。";
         #[cfg(all(feature = "wayland", not(feature = "x11")))]
         let error_msg = "不支持的平台：无法检测到 Wayland 显示器。请启用 'x11' 特性以支持 X11。";
 

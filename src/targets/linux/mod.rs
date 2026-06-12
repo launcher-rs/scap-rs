@@ -5,13 +5,13 @@
 compile_error!("必须启用 'wayland' 或 'x11' 特性之一。");
 
 #[cfg(feature = "x11")]
-use std::ffi::{c_char, CStr, CString, NulError};
+use std::ffi::{CStr, CString, NulError, c_char};
 
 use super::{Display, Target};
 
-use anyhow::anyhow;
 #[cfg(feature = "x11")]
 use anyhow::Context as _;
+use anyhow::anyhow;
 
 /// X11 相关导入
 #[cfg(feature = "x11")]
@@ -19,9 +19,9 @@ use x11::xlib::{XFreeStringList, XGetTextProperty, XTextProperty, XmbTextPropert
 /// XCB 相关导入（用于 X11 协议通信）
 #[cfg(feature = "x11")]
 use xcb::{
+    Xid,
     randr::{GetCrtcInfo, GetOutputInfo, GetOutputPrimary, GetScreenResources},
     x::{self, GetPropertyReply, Screen},
-    Xid,
 };
 
 /// 获取 X11 原子（Atom）
@@ -290,9 +290,7 @@ pub fn get_main_display() -> anyhow::Result<Display> {
     // Wayland 下暂不支持获取主显示器
     #[cfg(feature = "wayland")]
     if std::env::var("WAYLAND_DISPLAY").is_ok() {
-        return Err(anyhow!(
-            "Wayland 下暂不支持获取主显示器。"
-        ));
+        return Err(anyhow!("Wayland 下暂不支持获取主显示器。"));
     }
 
     // X11 下获取默认显示器

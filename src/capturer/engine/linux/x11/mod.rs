@@ -1,28 +1,27 @@
 /// X11 屏幕捕获实现
 /// 使用 XCB 协议进行屏幕捕获
-
 use std::{
     sync::{
+        Arc,
         atomic::{AtomicU8, Ordering},
         mpsc::{SendError, Sender},
-        Arc,
     },
     thread::JoinHandle,
 };
 
 use anyhow::Context as _;
-use xcb::{x, Xid};
+use xcb::{Xid, x};
 
-use crate::{capturer::Options, frame::Frame, targets::linux::get_default_x_display, Target};
+use crate::{Target, capturer::Options, frame::Frame, targets::linux::get_default_x_display};
 
-use super::{error::LinCapError, LinuxCapturerImpl};
+use super::{LinuxCapturerImpl, error::LinCapError};
 
 /// X11 捕获器结构体
 /// 管理 X11 屏幕捕获的生命周期
 pub struct X11Capturer {
-    capturer_join_handle: Option<JoinHandle<()>>,  // 捕获器线程句柄
-    capturer_state: Arc<AtomicU8>,  // 捕获器状态
-    target: Target,  // 捕获目标
+    capturer_join_handle: Option<JoinHandle<()>>, // 捕获器线程句柄
+    capturer_state: Arc<AtomicU8>,                // 捕获器状态
+    target: Target,                               // 捕获目标
 }
 
 /// 绘制鼠标光标到图像上

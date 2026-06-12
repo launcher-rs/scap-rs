@@ -19,12 +19,12 @@ pub use engine::get_output_frame_size;
 /// 输出分辨率枚举，支持多种标准分辨率
 #[derive(Debug, Clone, Copy, Default)]
 pub enum Resolution {
-    _480p,    // 480p 分辨率
-    _720p,    // 720p 高清分辨率
-    _1080p,   // 1080p 全高清分辨率
-    _1440p,   // 1440p 2K 分辨率
-    _2160p,   // 2160p 4K 分辨率
-    _4320p,   // 4320p 8K 分辨率
+    _480p,  // 480p 分辨率
+    _720p,  // 720p 高清分辨率
+    _1080p, // 1080p 全高清分辨率
+    _1440p, // 1440p 2K 分辨率
+    _2160p, // 2160p 4K 分辨率
+    _4320p, // 4320p 8K 分辨率
 
     #[default]
     Captured, // 使用原始捕获分辨率
@@ -51,49 +51,49 @@ impl Resolution {
 /// 二维坐标点结构体
 #[derive(Debug, Default, Clone)]
 pub struct Point {
-    pub x: f64,  // X 坐标
-    pub y: f64,  // Y 坐标
+    pub x: f64, // X 坐标
+    pub y: f64, // Y 坐标
 }
 
 /// 尺寸结构体，表示宽度和高度
 #[derive(Debug, Default, Clone)]
 pub struct Size {
-    pub width: f64,   // 宽度
-    pub height: f64,  // 高度
+    pub width: f64,  // 宽度
+    pub height: f64, // 高度
 }
 
 /// 区域结构体，由原点和尺寸定义
 #[derive(Debug, Default, Clone)]
 pub struct Area {
-    pub origin: Point,  // 区域原点
-    pub size: Size,     // 区域尺寸
+    pub origin: Point, // 区域原点
+    pub size: Size,    // 区域尺寸
 }
 
 /// 屏幕捕获选项配置
 /// 包含帧率、目标、裁剪区域、输出格式等参数
 #[derive(Debug, Default, Clone)]
 pub struct Options {
-    pub fps: u32,                    // 帧率（每秒帧数）
-    pub show_cursor: bool,           // 是否显示鼠标光标
-    pub show_highlight: bool,        // 是否显示高亮效果
-    pub target: Option<Target>,      // 捕获目标（显示器或窗口）
-    pub crop_area: Option<Area>,     // 裁剪区域（None 表示全屏）
-    pub output_type: FrameType,      // 输出帧格式
-    pub output_resolution: Resolution, // 输出分辨率
+    pub fps: u32,                              // 帧率（每秒帧数）
+    pub show_cursor: bool,                     // 是否显示鼠标光标
+    pub show_highlight: bool,                  // 是否显示高亮效果
+    pub target: Option<Target>,                // 捕获目标（显示器或窗口）
+    pub crop_area: Option<Area>,               // 裁剪区域（None 表示全屏）
+    pub output_type: FrameType,                // 输出帧格式
+    pub output_resolution: Resolution,         // 输出分辨率
     pub excluded_targets: Option<Vec<Target>>, // 排除的目标（仅 macOS 支持）
 }
 
 /// 屏幕捕获器主类
 /// 负责管理屏幕捕获的生命周期
 pub struct Capturer {
-    engine: engine::Engine,  // 底层捕获引擎
+    engine: engine::Engine,                          // 底层捕获引擎
     rx: mpsc::Receiver<anyhow::Result<ChannelItem>>, // 帧数据接收通道
 }
 
 /// 捕获器构建错误类型
 #[derive(Debug)]
 pub enum CapturerBuildError {
-    NotSupported,      // 平台不支持
+    NotSupported,         // 平台不支持
     PermissionNotGranted, // 权限未授予
 }
 
@@ -115,10 +115,7 @@ impl Error for CapturerBuildError {}
 impl Capturer {
     /// 创建新的捕获器实例（已弃用）
     /// 请使用 `build` 方法替代
-    #[deprecated(
-        since = "0.0.6",
-        note = "请使用 `build` 方法创建新的捕获器实例。"
-    )]
+    #[deprecated(since = "0.0.6", note = "请使用 `build` 方法创建新的捕获器实例。")]
     pub fn new(options: Options) -> anyhow::Result<Capturer> {
         let (tx, rx) = mpsc::channel();
         let engine = engine::Engine::new(&options, tx)?;
@@ -192,5 +189,5 @@ impl Capturer {
 /// 原始捕获器包装结构体
 pub struct RawCapturer<'a> {
     #[allow(dead_code)] // used on macOS via cfg
-    capturer: &'a Capturer,  // 捕获器引用
+    capturer: &'a Capturer, // 捕获器引用
 }

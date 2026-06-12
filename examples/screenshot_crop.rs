@@ -29,9 +29,10 @@ fn main() {
         },
     };
 
-    println!("截取区域: ({}, {}) - {}x{}",
-        crop_area.origin.x, crop_area.origin.y,
-        crop_area.size.width, crop_area.size.height);
+    println!(
+        "截取区域: ({}, {}) - {}x{}",
+        crop_area.origin.x, crop_area.origin.y, crop_area.size.width, crop_area.size.height
+    );
 
     // 创建捕获选项 - 指定区域捕获
     let options = Options {

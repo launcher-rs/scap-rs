@@ -1,17 +1,16 @@
 /// Wayland 屏幕捕获实现
 /// 使用 PipeWire 和 D-Bus 进行屏幕捕获
-
 use std::{
     mem::size_of,
     sync::{
         atomic::{AtomicBool, AtomicU8},
-        mpsc::{sync_channel, RecvError, SendError, Sender, SyncSender},
+        mpsc::{RecvError, SendError, Sender, SyncSender, sync_channel},
     },
     thread::JoinHandle,
     time::Duration,
 };
 
-use anyhow::{anyhow, Context as _, Result};
+use anyhow::{Context as _, Result, anyhow};
 use pipewire as pw;
 use pw::{
     context::Context,
@@ -20,13 +19,13 @@ use pw::{
     spa::{
         self,
         param::{
+            ParamType,
             format::{FormatProperties, MediaSubtype, MediaType},
             video::VideoFormat,
-            ParamType,
         },
         pod::{Pod, Property},
         sys::{
-            spa_buffer, spa_meta_header, SPA_META_Header, SPA_PARAM_META_size, SPA_PARAM_META_type,
+            SPA_META_Header, SPA_PARAM_META_size, SPA_PARAM_META_type, spa_buffer, spa_meta_header,
         },
         utils::{Direction, SpaTypes},
     },
@@ -55,8 +54,8 @@ static STREAM_STATE_CHANGED_TO_ERROR: AtomicBool = AtomicBool::new(false);
 /// 用户数据结构体，用于传递给 PipeWire 回调
 #[derive(Clone)]
 struct ListenerUserData {
-    pub tx: Sender<Result<Frame>>,  // 帧数据发送通道
-    pub format: spa::param::video::VideoInfoRaw,  // 视频格式信息
+    pub tx: Sender<Result<Frame>>,               // 帧数据发送通道
+    pub format: spa::param::video::VideoInfoRaw, // 视频格式信息
 }
 
 /// 参数变更回调函数
@@ -340,8 +339,7 @@ fn start_pipewire_capturer(
     .into_inner();
 
     let mut params = [
-        pw::spa::pod::Pod::from_bytes(&values)
-            .context("屏幕捕获 'values' 参数空间不足")?,
+        pw::spa::pod::Pod::from_bytes(&values).context("屏幕捕获 'values' 参数空间不足")?,
         pw::spa::pod::Pod::from_bytes(&metas_values)
             .context("屏幕捕获 'metas_values' 参数空间不足")?,
     ];
@@ -396,9 +394,9 @@ fn pipewire_capturer(
 /// Wayland 捕获器结构体
 /// 管理 PipeWire 流和 D-Bus 连接
 pub struct WaylandCapturer {
-    capturer_join_handle: Option<JoinHandle<()>>,  // 捕获器线程句柄
+    capturer_join_handle: Option<JoinHandle<()>>, // 捕获器线程句柄
     // PipeWire 流在连接释放时会被删除，因此需要保持连接
-    _connection: dbus::blocking::Connection,  // D-Bus 连接
+    _connection: dbus::blocking::Connection, // D-Bus 连接
 }
 
 impl WaylandCapturer {
@@ -407,8 +405,8 @@ impl WaylandCapturer {
     /// 通过 D-Bus 与 ScreenCast Portal 通信创建流
     pub fn new(options: &Options, tx: Sender<Result<Frame>>) -> Result<Self> {
         // 创建 D-Bus 会话连接
-        let connection = dbus::blocking::Connection::new_session()
-            .context("创建 D-Bus 连接失败")?;
+        let connection =
+            dbus::blocking::Connection::new_session().context("创建 D-Bus 连接失败")?;
 
         // 创建屏幕投射流
         let stream_id = ScreenCastPortal::new(&connection)
@@ -432,9 +430,7 @@ impl WaylandCapturer {
                 return Err(anyhow!(err));
             }
             Err(RecvError) => {
-                return Err(anyhow!(
-                    "Wayland 屏幕捕获 bug: 流意外释放"
-                ));
+                return Err(anyhow!("Wayland 屏幕捕获 bug: 流意外释放"));
             }
         }
 

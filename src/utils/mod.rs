@@ -17,10 +17,10 @@ pub fn has_permission() -> bool {
     return mac::has_permission();
 
     #[cfg(target_os = "windows")]
-    return true;  // Windows 默认有权限
+    return true; // Windows 默认有权限
 
     #[cfg(any(target_os = "linux", target_os = "freebsd"))]
-    return true;  // Linux/FreeBSD 默认有权限
+    return true; // Linux/FreeBSD 默认有权限
 }
 
 /// 请求用户授予屏幕捕获权限

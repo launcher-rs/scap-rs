@@ -1,6 +1,5 @@
 /// Linux 屏幕捕获错误类型定义
 /// 实现各种错误类型的转换
-
 use std::{
     error::Error,
     fmt::{self, Display, Formatter},
@@ -15,7 +14,7 @@ use pipewire::spa::pod::serialize::GenError;
 /// 封装各种可能的错误信息
 #[derive(Debug)]
 pub struct LinCapError {
-    msg: String,  // 错误消息
+    msg: String, // 错误消息
 }
 
 /// 实现 Error trait

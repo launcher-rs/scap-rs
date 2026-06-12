@@ -8,8 +8,8 @@ use super::{
     pixel_buffer::{pixel_buffer_bounds, sample_buffer_to_pixel_buffer},
 };
 use crate::frame::{
-    convert_bgra_to_rgb, get_cropped_data, remove_alpha_channel, BGRAFrame, BGRFrame, RGBFrame,
-    YUVFrame,
+    BGRAFrame, BGRFrame, RGBFrame, YUVFrame, convert_bgra_to_rgb, get_cropped_data,
+    remove_alpha_channel,
 };
 use core_graphics_helmer_fork::display::{CFArrayGetCount, CFArrayGetValueAtIndex, CFArrayRef};
 use core_video_sys::{

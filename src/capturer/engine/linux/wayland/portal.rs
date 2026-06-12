@@ -1,8 +1,7 @@
 /// Wayland 屏幕投射 Portal 实现
 /// 通过 D-Bus 与 XDG Desktop Portal 通信创建屏幕捕获会话
-
 use std::{
-    sync::{atomic::AtomicBool, Arc, Mutex},
+    sync::{Arc, Mutex, atomic::AtomicBool},
     time::Duration,
 };
 
@@ -153,8 +152,8 @@ trait OrgFreedesktopPortalRequest {
 /// 请求响应数据结构
 #[derive(Debug)]
 pub struct OrgFreedesktopPortalRequestResponse {
-    pub response: u32,              // 响应代码
-    pub results: arg::PropMap,      // 结果属性映射
+    pub response: u32,         // 响应代码
+    pub results: arg::PropMap, // 结果属性映射
 }
 
 /// 实现 D-Bus 参数追加
@@ -199,11 +198,11 @@ type Response = Option<OrgFreedesktopPortalRequestResponse>;
 #[derive(Debug)]
 #[allow(dead_code)]
 pub struct StreamVardict {
-    id: Option<String>,              // 流 ID
-    position: Option<(i32, i32)>,    // 流位置
-    size: Option<(i32, i32)>,        // 流尺寸
-    source_type: Option<u32>,        // 源类型
-    mapping_id: Option<String>,      // 映射 ID
+    id: Option<String>,           // 流 ID
+    position: Option<(i32, i32)>, // 流位置
+    size: Option<(i32, i32)>,     // 流尺寸
+    source_type: Option<u32>,     // 源类型
+    mapping_id: Option<String>,   // 映射 ID
 }
 
 /// 屏幕投射流结构
@@ -241,16 +240,12 @@ impl Stream {
 macro_rules! match_response {
     ( $code:expr ) => {
         match $code {
-            0 => {}  // 成功
+            0 => {} // 成功
             1 => {
-                return Err(LinCapError::new(String::from(
-                    "用户取消了交互",
-                )));
+                return Err(LinCapError::new(String::from("用户取消了交互")));
             }
             2 => {
-                return Err(LinCapError::new(String::from(
-                    "用户交互以其他方式结束",
-                )));
+                return Err(LinCapError::new(String::from("用户交互以其他方式结束")));
             }
             _ => unreachable!(),
         }
@@ -260,9 +255,9 @@ macro_rules! match_response {
 /// 屏幕投射 Portal 结构
 /// 管理与 XDG Desktop Portal 的 D-Bus 通信
 pub struct ScreenCastPortal<'a> {
-    proxy: Proxy<'a, &'a Connection>,  // D-Bus 代理
-    token: String,                     // 请求令牌
-    cursor_mode: u32,                  // 光标模式
+    proxy: Proxy<'a, &'a Connection>, // D-Bus 代理
+    token: String,                    // 请求令牌
+    cursor_mode: u32,                 // 光标模式
 }
 
 impl<'a> ScreenCastPortal<'a> {
@@ -281,7 +276,7 @@ impl<'a> ScreenCastPortal<'a> {
         Self {
             proxy,
             token,
-            cursor_mode: 1,  // 默认光标模式
+            cursor_mode: 1, // 默认光标模式
         }
     }
 
@@ -382,9 +377,7 @@ impl<'a> ScreenCastPortal<'a> {
                     let p = dbus::Path::from(match h {
                         Some(p) => p,
                         None => {
-                            return Err(LinCapError::new(String::from(
-                                "收到无效的 session_handle",
-                            )))
+                            return Err(LinCapError::new(String::from("收到无效的 session_handle")));
                         }
                     });
 
@@ -440,11 +433,7 @@ impl<'a> ScreenCastPortal<'a> {
             match res.results.get("streams") {
                 Some(s) => match Stream::from_dbus(s) {
                     Some(s) => return Ok(s),
-                    None => {
-                        return Err(LinCapError::new(String::from(
-                            "提取流属性失败",
-                        )))
-                    }
+                    None => return Err(LinCapError::new(String::from("提取流属性失败"))),
                 },
                 None => return Err(LinCapError::new(String::from("未获取到任何流"))),
             }
@@ -465,11 +454,11 @@ impl<'a> ScreenCastPortal<'a> {
     pub fn show_cursor(mut self, mode: bool) -> Result<Self, LinCapError> {
         let available_modes = self.proxy.available_cursor_modes()?;
         if mode && available_modes & 2 == 2 {
-            self.cursor_mode = 2;  // 显示光标
+            self.cursor_mode = 2; // 显示光标
             return Ok(self);
         }
         if !mode && available_modes & 1 == 1 {
-            self.cursor_mode = 1;  // 隐藏光标
+            self.cursor_mode = 1; // 隐藏光标
             return Ok(self);
         }
 

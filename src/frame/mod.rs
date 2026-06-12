@@ -2,83 +2,83 @@
 /// 包含亮度和色度分量数据
 #[derive(Debug, Clone)]
 pub struct YUVFrame {
-    pub display_time: u64,           // 显示时间戳（纳秒）
-    pub width: i32,                  // 帧宽度（像素）
-    pub height: i32,                 // 帧高度（像素）
-    pub luminance_bytes: Vec<u8>,    // 亮度分量数据（Y）
-    pub luminance_stride: i32,       // 亮度分量步长
-    pub chrominance_bytes: Vec<u8>,  // 色度分量数据（UV）
-    pub chrominance_stride: i32,     // 色度分量步长
+    pub display_time: u64,          // 显示时间戳（纳秒）
+    pub width: i32,                 // 帧宽度（像素）
+    pub height: i32,                // 帧高度（像素）
+    pub luminance_bytes: Vec<u8>,   // 亮度分量数据（Y）
+    pub luminance_stride: i32,      // 亮度分量步长
+    pub chrominance_bytes: Vec<u8>, // 色度分量数据（UV）
+    pub chrominance_stride: i32,    // 色度分量步长
 }
 
 /// RGB 帧格式结构体
 /// 包含红、绿、蓝三通道数据
 #[derive(Debug, Clone)]
 pub struct RGBFrame {
-    pub display_time: u64,  // 显示时间戳（纳秒）
-    pub width: i32,         // 帧宽度（像素）
-    pub height: i32,        // 帧高度（像素）
-    pub data: Vec<u8>,      // RGB 像素数据
+    pub display_time: u64, // 显示时间戳（纳秒）
+    pub width: i32,        // 帧宽度（像素）
+    pub height: i32,       // 帧高度（像素）
+    pub data: Vec<u8>,     // RGB 像素数据
 }
 
 /// RGB8 帧格式结构体（无数据字段）
 #[derive(Debug, Clone)]
 pub struct RGB8Frame {
-    pub display_time: u64,  // 显示时间戳（纳秒）
-    pub width: i32,         // 帧宽度（像素）
-    pub height: i32,        // 帧高度（像素）
+    pub display_time: u64, // 显示时间戳（纳秒）
+    pub width: i32,        // 帧宽度（像素）
+    pub height: i32,       // 帧高度（像素）
 }
 
 /// RGBx 帧格式结构体（包含填充字节）
 #[derive(Debug, Clone)]
 pub struct RGBxFrame {
-    pub display_time: u64,  // 显示时间戳（纳秒）
-    pub width: i32,         // 帧宽度（像素）
-    pub height: i32,        // 帧高度（像素）
-    pub data: Vec<u8>,      // RGBx 像素数据
+    pub display_time: u64, // 显示时间戳（纳秒）
+    pub width: i32,        // 帧宽度（像素）
+    pub height: i32,       // 帧高度（像素）
+    pub data: Vec<u8>,     // RGBx 像素数据
 }
 
 /// XBGR 帧格式结构体
 #[derive(Debug, Clone)]
 pub struct XBGRFrame {
-    pub display_time: u64,  // 显示时间戳（纳秒）
-    pub width: i32,         // 帧宽度（像素）
-    pub height: i32,        // 帧高度（像素）
-    pub data: Vec<u8>,      // XBGR 像素数据
+    pub display_time: u64, // 显示时间戳（纳秒）
+    pub width: i32,        // 帧宽度（像素）
+    pub height: i32,       // 帧高度（像素）
+    pub data: Vec<u8>,     // XBGR 像素数据
 }
 
 /// BGRx 帧格式结构体
 #[derive(Debug, Clone)]
 pub struct BGRxFrame {
-    pub display_time: u64,  // 显示时间戳（纳秒）
-    pub width: i32,         // 帧宽度（像素）
-    pub height: i32,        // 帧高度（像素）
-    pub data: Vec<u8>,      // BGRx 像素数据
+    pub display_time: u64, // 显示时间戳（纳秒）
+    pub width: i32,        // 帧宽度（像素）
+    pub height: i32,       // 帧高度（像素）
+    pub data: Vec<u8>,     // BGRx 像素数据
 }
 
 /// BGR 帧格式结构体
 #[derive(Debug, Clone)]
 pub struct BGRFrame {
-    pub display_time: u64,  // 显示时间戳（纳秒）
-    pub width: i32,         // 帧宽度（像素）
-    pub height: i32,        // 帧高度（像素）
-    pub data: Vec<u8>,      // BGR 像素数据
+    pub display_time: u64, // 显示时间戳（纳秒）
+    pub width: i32,        // 帧宽度（像素）
+    pub height: i32,       // 帧高度（像素）
+    pub data: Vec<u8>,     // BGR 像素数据
 }
 
 /// BGRA 帧格式结构体（包含 Alpha 通道）
 #[derive(Debug, Clone)]
 pub struct BGRAFrame {
-    pub display_time: u64,  // 显示时间戳（纳秒）
-    pub width: i32,         // 帧宽度（像素）
-    pub height: i32,        // 帧高度（像素）
-    pub data: Vec<u8>,      // BGRA 像素数据
+    pub display_time: u64, // 显示时间戳（纳秒）
+    pub width: i32,        // 帧宽度（像素）
+    pub height: i32,       // 帧高度（像素）
+    pub data: Vec<u8>,     // BGRA 像素数据
 }
 
 /// 帧类型枚举，指定输出帧的格式
 #[derive(Debug, Clone, Copy, Default)]
 pub enum FrameType {
     #[default]
-    YUVFrame,  // YUV 格式（推荐，性能最佳）
+    YUVFrame, // YUV 格式（推荐，性能最佳）
     BGR0,      // BGR0 格式（推荐，性能较好）
     RGB,       // RGB 格式（性能较慢，不推荐）
     BGRAFrame, // BGRA 格式（包含 Alpha 通道）
@@ -87,19 +87,19 @@ pub enum FrameType {
 /// 统一的帧数据枚举，包含所有支持的帧格式
 #[derive(Debug, Clone)]
 pub enum Frame {
-    YUVFrame(YUVFrame),  // YUV 帧
-    RGB(RGBFrame),       // RGB 帧
-    RGBx(RGBxFrame),     // RGBx 帧
-    XBGR(XBGRFrame),     // XBGR 帧
-    BGRx(BGRxFrame),     // BGRx 帧
-    BGR0(BGRFrame),      // BGR0 帧
-    BGRA(BGRAFrame),     // BGRA 帧
+    YUVFrame(YUVFrame), // YUV 帧
+    RGB(RGBFrame),      // RGB 帧
+    RGBx(RGBxFrame),    // RGBx 帧
+    XBGR(XBGRFrame),    // XBGR 帧
+    BGRx(BGRxFrame),    // BGRx 帧
+    BGR0(BGRFrame),     // BGR0 帧
+    BGRA(BGRAFrame),    // BGRA 帧
 }
 
 /// 帧数据引用枚举，用于零拷贝访问帧数据
 pub enum FrameData<'a> {
-    NV12(&'a YUVFrame),  // NV12 格式 YUV 帧引用
-    BGR0(&'a [u8]),      // BGR0 格式数据引用
+    NV12(&'a YUVFrame), // NV12 格式 YUV 帧引用
+    BGR0(&'a [u8]),     // BGR0 格式数据引用
 }
 
 /// 移除图像数据的 Alpha 通道
@@ -130,9 +130,9 @@ pub fn convert_bgra_to_rgb(frame_data: Vec<u8>) -> Vec<u8> {
 
     // 转换颜色通道顺序：B,G,R,A -> R,G,B
     for (src, dst) in frame_data.chunks_exact(4).zip(data.chunks_exact_mut(3)) {
-        dst[0] = src[2];  // R
-        dst[1] = src[1];  // G
-        dst[2] = src[0];  // B
+        dst[0] = src[2]; // R
+        dst[1] = src[1]; // G
+        dst[2] = src[0]; // B
     }
 
     data

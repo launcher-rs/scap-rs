@@ -1,6 +1,5 @@
 /// macOS 平台屏幕捕获实现
 /// 使用 ScreenCaptureKit 框架进行屏幕捕获
-
 use std::sync::atomic::AtomicBool;
 use std::sync::mpsc;
 use std::{cmp, sync::Arc};
@@ -42,7 +41,7 @@ pub use pixel_buffer::PixelBuffer;
 /// 错误处理器结构体
 /// 实现 StreamErrorHandler trait 处理流错误
 struct ErrorHandler {
-    error_flag: Arc<AtomicBool>,  // 错误标志原子变量
+    error_flag: Arc<AtomicBool>, // 错误标志原子变量
 }
 
 /// 实现 StreamErrorHandler trait
@@ -57,7 +56,7 @@ impl StreamErrorHandler for ErrorHandler {
 /// macOS 捕获器结构体
 /// 实现 StreamOutput trait 处理输出数据
 pub struct Capturer {
-    pub tx: mpsc::Sender<anyhow::Result<ChannelItem>>,  // 帧数据发送通道
+    pub tx: mpsc::Sender<anyhow::Result<ChannelItem>>, // 帧数据发送通道
 }
 
 impl Capturer {
@@ -210,7 +209,7 @@ pub fn get_output_frame_size(options: &Options) -> [u32; 2] {
 
     // 应用分辨率限制
     match options.output_resolution {
-        Resolution::Captured => {}  // 使用原始分辨率
+        Resolution::Captured => {} // 使用原始分辨率
         _ => {
             let [resolved_width, resolved_height] = options
                 .output_resolution

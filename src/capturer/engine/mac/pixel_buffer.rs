@@ -9,7 +9,7 @@ use screencapturekit::{cm_sample_buffer::CMSampleBuffer, sc_types::SCFrameStatus
 use screencapturekit_sys::cm_sample_buffer_ref::CMSampleBufferGetImageBuffer;
 use std::{ops::Deref, sync::mpsc};
 
-use crate::capturer::{engine::ChannelItem, RawCapturer};
+use crate::capturer::{RawCapturer, engine::ChannelItem};
 
 pub struct PixelBuffer {
     display_time: u64,

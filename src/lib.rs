@@ -1,5 +1,5 @@
 //! 跨平台、高性能、高质量的屏幕录制库
-//! 
+//!
 //! 本库支持 macOS、Windows 和 Linux 平台，提供屏幕捕获、帧处理等功能。
 //! 主要功能包括：
 //! - 屏幕捕获（支持全屏和窗口捕获）
@@ -20,11 +20,11 @@ mod targets;
 mod utils;
 
 // 重新导出常用类型和函数，方便用户使用
-pub use targets::get_all_targets;  // 获取所有可捕获目标
-pub use targets::Target;           // 目标类型枚举
+pub use targets::Target; // 目标类型枚举
+pub use targets::get_all_targets; // 获取所有可捕获目标
 pub use targets::{Display, Window}; // 显示器和窗口类型
-pub use utils::has_permission;     // 检查是否有屏幕捕获权限
-pub use utils::is_supported;       // 检查当前平台是否支持
+pub use utils::has_permission; // 检查是否有屏幕捕获权限
+pub use utils::is_supported; // 检查当前平台是否支持
 pub use utils::request_permission; // 请求屏幕捕获权限
 
 /// macOS 平台特定的引擎模块

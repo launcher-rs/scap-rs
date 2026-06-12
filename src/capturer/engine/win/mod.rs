@@ -24,22 +24,22 @@ use windows_capture::{
 /// 实现 GraphicsCaptureApiHandler trait 处理帧数据
 #[derive(Debug)]
 struct Capturer {
-    pub tx: mpsc::Sender<anyhow::Result<Frame>>,  // 帧数据发送通道
-    pub crop: Option<Area>,                       // 裁剪区域
+    pub tx: mpsc::Sender<anyhow::Result<Frame>>, // 帧数据发送通道
+    pub crop: Option<Area>,                      // 裁剪区域
 }
 
 /// 捕获设置枚举，支持窗口或显示器捕获
 #[derive(Clone)]
 enum Settings {
-    Window(WCSettings<FlagStruct, WCWindow>),    // 窗口捕获设置
-    Display(WCSettings<FlagStruct, WCMonitor>),  // 显示器捕获设置
+    Window(WCSettings<FlagStruct, WCWindow>),   // 窗口捕获设置
+    Display(WCSettings<FlagStruct, WCMonitor>), // 显示器捕获设置
 }
 
 /// Windows 捕获流结构体
 /// 管理捕获会话的生命周期
 pub struct WCStream {
-    settings: Settings,  // 捕获设置
-    capture_control: Option<CaptureControl<Capturer, Box<dyn std::error::Error + Send + Sync>>>,  // 捕获控制句柄
+    settings: Settings, // 捕获设置
+    capture_control: Option<CaptureControl<Capturer, Box<dyn std::error::Error + Send + Sync>>>, // 捕获控制句柄
 }
 
 /// 实现 GraphicsCaptureApiHandler trait
@@ -155,17 +155,21 @@ impl WCStream {
 /// 标志结构体，包含通道和裁剪区域
 #[derive(Clone, Debug)]
 struct FlagStruct {
-    pub tx: mpsc::Sender<anyhow::Result<Frame>>,  // 帧数据发送通道
-    pub crop: Option<Area>,                       // 裁剪区域
+    pub tx: mpsc::Sender<anyhow::Result<Frame>>, // 帧数据发送通道
+    pub crop: Option<Area>,                      // 裁剪区域
 }
 
 /// 创建 Windows 捕获器
 /// 根据选项配置创建捕获流和目标
-pub fn create_capturer(options: &Options, tx: mpsc::Sender<anyhow::Result<Frame>>) -> (WCStream, Target) {
+pub fn create_capturer(
+    options: &Options,
+    tx: mpsc::Sender<anyhow::Result<Frame>>,
+) -> (WCStream, Target) {
     // 获取捕获目标，默认使用主显示器
-    let target = options.target.clone().unwrap_or_else(|| {
-        Target::Display(targets::get_main_display().expect("获取主显示器失败"))
-    });
+    let target = options
+        .target
+        .clone()
+        .unwrap_or_else(|| Target::Display(targets::get_main_display().expect("获取主显示器失败")));
 
     // 根据输出类型选择颜色格式
     let color_format = match options.output_type {
@@ -209,10 +213,13 @@ pub fn create_capturer(options: &Options, tx: mpsc::Sender<anyhow::Result<Frame>
         )),
     };
 
-    (WCStream {
-        settings,
-        capture_control: None,
-    }, target)
+    (
+        WCStream {
+            settings,
+            capture_control: None,
+        },
+        target,
+    )
 }
 
 /// 获取输出帧尺寸
@@ -225,7 +232,7 @@ pub fn get_output_frame_size(options: &Options) -> [u32; 2] {
 
     // 应用分辨率限制
     match options.output_resolution {
-        Resolution::Captured => {}  // 使用原始分辨率
+        Resolution::Captured => {} // 使用原始分辨率
         _ => {
             let [resolved_width, resolved_height] = options
                 .output_resolution
@@ -253,9 +260,10 @@ fn get_absolute_value(value: f64, scale_factor: f64) -> f64 {
 /// 根据选项和目标尺寸计算实际裁剪区域
 pub fn get_crop_area(options: &Options) -> Area {
     // 获取捕获目标
-    let target = options.target.clone().unwrap_or_else(|| {
-        Target::Display(targets::get_main_display().expect("获取主显示器失败"))
-    });
+    let target = options
+        .target
+        .clone()
+        .unwrap_or_else(|| Target::Display(targets::get_main_display().expect("获取主显示器失败")));
 
     // 获取目标尺寸
     let (width, height) = targets::get_target_dimensions(&target);
@@ -267,17 +275,15 @@ pub fn get_crop_area(options: &Options) -> Area {
     options
         .crop_area
         .as_ref()
-        .map(|val| {
-            Area {
-                origin: Point {
-                    x: get_absolute_value(val.origin.x, scale_factor),
-                    y: get_absolute_value(val.origin.y, scale_factor),
-                },
-                size: Size {
-                    width: get_absolute_value(val.size.width, scale_factor),
-                    height: get_absolute_value(val.size.height, scale_factor),
-                },
-            }
+        .map(|val| Area {
+            origin: Point {
+                x: get_absolute_value(val.origin.x, scale_factor),
+                y: get_absolute_value(val.origin.y, scale_factor),
+            },
+            size: Size {
+                width: get_absolute_value(val.size.width, scale_factor),
+                height: get_absolute_value(val.size.height, scale_factor),
+            },
         })
         // 否则使用完整目标区域
         .unwrap_or_else(|| Area {

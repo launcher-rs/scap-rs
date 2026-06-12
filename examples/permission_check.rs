@@ -40,8 +40,14 @@ fn main() {
     println!("   找到 {} 个可捕获目标\n", targets.len());
 
     // 列出部分目标
-    let display_count = targets.iter().filter(|t| matches!(t, scap_rs::Target::Display(_))).count();
-    let window_count = targets.iter().filter(|t| matches!(t, scap_rs::Target::Window(_))).count();
+    let display_count = targets
+        .iter()
+        .filter(|t| matches!(t, scap_rs::Target::Display(_)))
+        .count();
+    let window_count = targets
+        .iter()
+        .filter(|t| matches!(t, scap_rs::Target::Window(_)))
+        .count();
     println!("   显示器: {} 个", display_count);
     println!("   窗口: {} 个", window_count);
 

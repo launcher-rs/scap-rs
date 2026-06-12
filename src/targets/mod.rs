@@ -27,7 +27,7 @@ pub struct Window {
     pub raw_handle: core_graphics_helmer_fork::window::CGWindowID,
 
     /// Linux 平台 X11 窗口句柄
-    #[cfg(all(any(target_os = "linux", target_os = "freebsd"), feature = "x11" ))]
+    #[cfg(all(any(target_os = "linux", target_os = "freebsd"), feature = "x11"))]
     pub raw_handle: xcb::x::Window,
 }
 
@@ -46,7 +46,7 @@ pub struct Display {
     pub raw_handle: core_graphics_helmer_fork::display::CGDisplay,
 
     /// Linux 平台 X11 显示器句柄
-    #[cfg(all(any(target_os = "linux", target_os = "freebsd"), feature = "x11" ))]
+    #[cfg(all(any(target_os = "linux", target_os = "freebsd"), feature = "x11"))]
     pub raw_handle: xcb::x::Window,
 
     /// 显示器宽度（像素）
@@ -69,8 +69,8 @@ pub struct Display {
 /// 捕获目标枚举，可以是窗口或显示器
 #[derive(Debug, Clone)]
 pub enum Target {
-    Window(Window),     // 窗口目标
-    Display(Display),   // 显示器目标
+    Window(Window),   // 窗口目标
+    Display(Display), // 显示器目标
 }
 
 // 为 Windows 平台的 Display 和 Window 实现 Send 和 Sync trait

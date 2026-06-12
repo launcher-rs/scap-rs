@@ -1,6 +1,5 @@
 /// macOS 平台工具函数实现
 /// 处理权限检查和平台支持检测
-
 use core_graphics_helmer_fork::access::ScreenCaptureAccess;
 use sysinfo::System;
 

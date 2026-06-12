@@ -37,10 +37,7 @@ pub fn get_all_targets() -> Result<Vec<Target>> {
     let windows = Window::enumerate().context("枚举窗口失败")?;
     for window in windows {
         let id = window.as_raw_hwnd() as u32;
-        let title = window
-            .title()
-            .context("未找到窗口标题")?
-            .to_string();
+        let title = window.title().context("未找到窗口标题")?.to_string();
 
         let target = Target::Window(super::Window {
             id,
@@ -81,7 +78,7 @@ fn monitor_title(monitor: &Monitor) -> Result<String, MonitorError> {
 /// 基于 DPI 计算缩放比例
 /// 参考：https://github.com/tauri-apps/tao/blob/ab792dbd6c5f0a708c818b20eaff1d9a7534c7c1/src/platform_impl/windows/dpi.rs#L50
 pub fn get_scale_factor(target: &Target) -> f64 {
-    const BASE_DPI: u32 = 96;  // 基准 DPI
+    const BASE_DPI: u32 = 96; // 基准 DPI
 
     let mut dpi_x = 0;
     let mut dpi_y = 0;
@@ -100,7 +97,7 @@ pub fn get_scale_factor(target: &Target) -> f64 {
             {
                 dpi_x
             } else {
-                BASE_DPI  // 获取失败时使用基准 DPI
+                BASE_DPI // 获取失败时使用基准 DPI
             }
         },
     };

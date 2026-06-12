@@ -3,7 +3,7 @@ use std::sync::mpsc;
 use anyhow::Result;
 
 use super::Options;
-use crate::{frame::Frame, Target};
+use crate::{Target, frame::Frame};
 
 /// macOS 平台引擎模块
 #[cfg(target_os = "macos")]
@@ -50,8 +50,8 @@ pub fn get_output_frame_size(options: &Options) -> [u32; 2] {
 /// 捕获引擎结构体
 /// 封装不同平台的屏幕捕获实现
 pub struct Engine {
-    options: Options,                    // 捕获选项配置
-    target: Option<Target>,              // 当前捕获目标
+    options: Options,       // 捕获选项配置
+    target: Option<Target>, // 当前捕获目标
 
     /// macOS 平台的 SCStream 捕获流
     #[cfg(target_os = "macos")]

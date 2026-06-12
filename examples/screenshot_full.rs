@@ -28,7 +28,7 @@ fn main() {
         excluded_targets: None,
         output_type: scap_rs::frame::FrameType::BGRAFrame,
         output_resolution: scap_rs::capturer::Resolution::Captured, // 原始分辨率
-        crop_area: None, // None 表示全屏
+        crop_area: None,                                            // None 表示全屏
         ..Default::default()
     };
 
