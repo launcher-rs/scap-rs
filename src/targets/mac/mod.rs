@@ -1,8 +1,5 @@
 /// macOS 平台目标管理实现
 /// 使用 Cocoa 和 Core Graphics API 枚举显示器和窗口
-
-#![allow(unexpected_cfgs)]
-
 use anyhow::{Context as _, Result};
 use cocoa::appkit::{NSApp, NSScreen};
 use cocoa::base::{id, nil};
