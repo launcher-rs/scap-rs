@@ -353,7 +353,7 @@ impl<'a> ScreenCastPortal<'a> {
     }
 
     /// 创建屏幕投射会话
-    fn create_session(&self) -> Result<dbus::Path, LinCapError> {
+    fn create_session(&self) -> Result<dbus::Path<'_>, LinCapError> {
         let request_handle = self.proxy.create_session(self.create_session_args())?;
 
         let response = Arc::new(Mutex::new(None));

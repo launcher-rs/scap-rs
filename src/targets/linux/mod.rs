@@ -286,6 +286,7 @@ pub(crate) fn get_default_x_display(
 
 /// 获取主显示器信息
 /// 返回系统主显示器的详细信息
+#[allow(dead_code)]
 pub fn get_main_display() -> anyhow::Result<Display> {
     // Wayland 下暂不支持获取主显示器
     #[cfg(feature = "wayland")]
@@ -316,6 +317,7 @@ pub fn get_main_display() -> anyhow::Result<Display> {
 
 /// 获取目标的像素尺寸
 /// 窗口返回 (0, 0)（待实现），显示器返回实际尺寸
+#[allow(dead_code)]
 pub fn get_target_dimensions(target: &Target) -> (u64, u64) {
     match target {
         Target::Window(_w) => (0, 0), // TODO: 实现窗口尺寸获取

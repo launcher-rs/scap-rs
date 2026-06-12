@@ -100,7 +100,7 @@ pub fn get_all_targets() -> Result<Vec<Target>> {
 
 /// 获取目标的缩放因子
 /// 用于处理高 DPI 显示器
-#[allow(unused_variables)]
+#[allow(unused_variables, dead_code)]
 pub fn get_scale_factor(target: &Target) -> f64 {
     #[cfg(target_os = "macos")]
     return mac::get_scale_factor(target);
@@ -114,6 +114,7 @@ pub fn get_scale_factor(target: &Target) -> f64 {
 
 /// 获取主显示器信息
 /// 返回系统主显示器的详细信息
+#[allow(dead_code)]
 pub fn get_main_display() -> Result<Display> {
     #[cfg(target_os = "macos")]
     return mac::get_main_display();
@@ -127,6 +128,7 @@ pub fn get_main_display() -> Result<Display> {
 
 /// 获取目标的像素尺寸
 /// 返回 (宽度, 高度) 的元组
+#[allow(dead_code)]
 pub fn get_target_dimensions(target: &Target) -> (u64, u64) {
     #[cfg(target_os = "macos")]
     return mac::get_target_dimensions(target);
