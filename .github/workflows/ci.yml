@@ -85,7 +85,7 @@ jobs:
             libdbus-1-dev
 
       - name: Check each feature
-        run: cargo hack check --each-feature --workspace --exclude-features wayland,x11
+        run: cargo hack check --each-feature --workspace
 
   lint:
     name: Formatting
