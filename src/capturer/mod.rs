@@ -179,7 +179,7 @@ impl Capturer {
     }
 
     /// 获取原始捕获器引用
-    pub fn raw(&self) -> RawCapturer {
+    pub fn raw(&self) -> RawCapturer<'_> {
         RawCapturer { capturer: self }
     }
 
@@ -191,5 +191,6 @@ impl Capturer {
 
 /// 原始捕获器包装结构体
 pub struct RawCapturer<'a> {
+    #[allow(dead_code)] // used on macOS via cfg
     capturer: &'a Capturer,  // 捕获器引用
 }

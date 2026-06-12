@@ -2,30 +2,30 @@
 // 参考 `lib.rs` 获取库源代码
 
 use std::process;
-use zed_scap::{
+use scap_rs::{
     capturer::{Area, Capturer, Options, Point, Size},
     frame::Frame,
 };
 
 fn main() {
     // 检查当前平台是否支持屏幕捕获
-    if !zed_scap::is_supported() {
+    if !scap_rs::is_supported() {
         println!("❌ 当前平台不支持屏幕捕获");
         return;
     }
 
     // 检查是否有屏幕捕获权限
     // 如果没有权限，则请求用户授权
-    if !zed_scap::has_permission() {
+    if !scap_rs::has_permission() {
         println!("❌ 未获得权限，正在请求权限...");
-        if !zed_scap::request_permission() {
+        if !scap_rs::request_permission() {
             println!("❌ 权限被拒绝");
             return;
         }
     }
 
     // // 获取所有可捕获的目标（显示器、窗口等）
-    // let targets = zed_scap::get_all_targets();
+    // let targets = scap_rs::get_all_targets();
 
     // 创建捕获选项配置
     let options = Options {
@@ -33,8 +33,8 @@ fn main() {
         show_cursor: true,          // 显示鼠标光标
         show_highlight: true,       // 显示高亮效果
         excluded_targets: None,     // 不排除任何目标
-        output_type: zed_scap::frame::FrameType::BGRAFrame,  // 输出帧格式：BGRA
-        output_resolution: zed_scap::capturer::Resolution::_720p,  // 输出分辨率：720p
+        output_type: scap_rs::frame::FrameType::BGRAFrame,  // 输出帧格式：BGRA
+        output_resolution: scap_rs::capturer::Resolution::_720p,  // 输出分辨率：720p
         crop_area: Some(Area {      // 裁剪区域：500x500 像素
             origin: Point { x: 0.0, y: 0.0 },
             size: Size {
